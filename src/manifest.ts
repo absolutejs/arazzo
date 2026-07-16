@@ -1,0 +1,17 @@
+import { defineManifest } from "@absolutejs/manifest";
+import { Type } from "@sinclair/typebox";
+
+export const manifest = defineManifest<Record<string, never>>()({
+  contract: 2,
+  identity: {
+    accent: "#0ea5e9",
+    category: "ai",
+    description:
+      "Arazzo 1.1 workflow discovery, parsing, semantic validation, dependency planning, runtime expressions, and policy-gated provider-neutral execution.",
+    docsUrl: "https://github.com/absolutejs/arazzo",
+    name: "@absolutejs/arazzo",
+    tagline: "Give agents a standard map from API capability to safe outcome.",
+  },
+  settings: Type.Object({}),
+  wiring: [],
+});
