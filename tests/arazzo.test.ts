@@ -3,6 +3,7 @@ import {
   ArazzoDocumentError,
   ArazzoExecutionError,
   compileArazzoWorkflow,
+  createArazzoHttpActionProjection,
   discoverArazzo,
   executeArazzoWorkflow,
   parseArazzo,
@@ -163,5 +164,90 @@ describe("Arazzo 1.1", () => {
           new Response(source, { headers: { "content-type": "text/html" } }),
       }),
     ).rejects.toBeInstanceOf(ArazzoDocumentError);
+  });
+
+  test("derives one-step HTTP workflows and OpenAPI operations from one action list", async () => {
+    const projection = createArazzoHttpActionProjection({
+      actions: [
+        {
+          description: "Read project health",
+          inputSchema: {
+            additionalProperties: false,
+            properties: { projectId: { type: "string" } },
+            required: ["projectId"],
+            type: "object",
+          },
+          operationId: "project_summary_read",
+          outputSchema: { type: "object" },
+          path: "/api/actions/project_summary_read",
+          summary: "Project summary",
+          workflowId: "project_summary_read",
+        },
+      ],
+      openapiUrl: "https://api.example/openapi.json",
+      security: {
+        authorizationUrl: "https://api.example/oauth2/authorize",
+        schemeName: "ownerOAuth",
+        scopes: { "arazzo:owner:read": "Read owner project state" },
+        tokenUrl: "https://api.example/oauth2/token",
+      },
+      self: "https://api.example/workflows.arazzo.json",
+      title: "Owner workflows",
+      version: "1.0.0",
+    });
+    expect(validateArazzo(projection.document)).toEqual([]);
+    expect(projection.document.workflows[0]).toMatchObject({
+      inputs: { additionalProperties: false, type: "object" },
+      steps: [
+        {
+          operationId: "project_summary_read",
+          requestBody: { payload: { projectId: "$inputs.projectId" } },
+          stepId: "execute",
+        },
+      ],
+      workflowId: "project_summary_read",
+    });
+    expect(projection.openapi).toMatchObject({
+      openapi: "3.1.2",
+      paths: {
+        "/api/actions/project_summary_read": {
+          post: { operationId: "project_summary_read" },
+        },
+      },
+      security: [{ ownerOAuth: ["arazzo:owner:read"] }],
+    });
+    const result = await executeArazzoWorkflow(
+      projection.document,
+      "project_summary_read",
+      {
+        adapter: {
+          authorize: () => ({ kind: "allow" }),
+          executeOperation: (input) => ({
+            body: input.requestBody?.payload,
+            statusCode: 200,
+          }),
+        },
+        inputs: { projectId: "project-1" },
+      },
+    );
+    expect(result.outputs).toEqual({ result: { projectId: "project-1" } });
+  });
+
+  test("rejects ambiguous action projections before discovery", () => {
+    const action = {
+      inputSchema: { properties: {}, type: "object" },
+      operationId: "read_project",
+      outputSchema: { type: "object" },
+      path: "/api/actions/read_project",
+      workflowId: "read_project",
+    };
+    expect(() =>
+      createArazzoHttpActionProjection({
+        actions: [action, action],
+        openapiUrl: "https://api.example/openapi.json",
+        title: "Invalid projection",
+        version: "1.0.0",
+      }),
+    ).toThrow("operationId values must be unique");
   });
 });

@@ -4,3 +4,4 @@ export * from "./validate";
 export * from "./expressions";
 export * from "./plan";
 export * from "./execute";
+export * from "./projection";

@@ -45,6 +45,14 @@ Remote discovery requires HTTPS outside localhost, rejects embedded URL
 credentials and redirects, caps response size, enforces a timeout, validates
 the media type, and parses JSON or YAML with bounded aliases.
 
+Applications that already own a typed HTTP action catalog can derive matching
+one-step Arazzo workflows and OpenAPI operations with
+`createArazzoHttpActionProjection`. The helper accepts one action list, rejects
+duplicate identifiers and paths, carries the exact input/output JSON Schemas
+into both documents, and can describe an OAuth 2.0 authorization-code boundary.
+It does not execute or authorize the actions; the application's existing HTTP
+handler remains the effect and policy boundary.
+
 Specification: <https://spec.openapis.org/arazzo/latest.html>
 
 ## License

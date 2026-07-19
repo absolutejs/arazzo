@@ -7,6 +7,7 @@ export const manifest = defineManifest<Record<string, never>>()({
     audiences: ["agent-hosts", "api-platforms"],
     intents: [
       "plan API workflows",
+      "project typed HTTP actions into Arazzo and OpenAPI",
       "validate Arazzo documents",
       "execute policy-gated workflows",
     ],
@@ -24,7 +25,7 @@ export const manifest = defineManifest<Record<string, never>>()({
     accent: "#0ea5e9",
     category: "ai",
     description:
-      "Arazzo 1.1 workflow discovery, parsing, semantic validation, dependency planning, runtime expressions, and policy-gated provider-neutral execution.",
+      "Arazzo 1.1 workflow discovery, typed HTTP action projection, parsing, semantic validation, dependency planning, runtime expressions, and policy-gated provider-neutral execution.",
     docsUrl: "https://github.com/absolutejs/arazzo",
     name: "@absolutejs/arazzo",
     tagline: "Give agents a standard map from API capability to safe outcome.",

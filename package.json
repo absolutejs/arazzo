@@ -1,6 +1,6 @@
 {
   "name": "@absolutejs/arazzo",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Arazzo 1.1 workflow discovery, validation, planning, and policy-aware execution for AI agents.",
   "type": "module",
   "license": "MIT",
