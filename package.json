@@ -1,6 +1,6 @@
 {
   "name": "@absolutejs/arazzo",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Arazzo 1.1 workflow discovery, validation, planning, and policy-aware execution for AI agents.",
   "type": "module",
   "license": "MIT",
@@ -45,7 +45,7 @@
     "check:package": "bun run format && bun run typecheck && bun run test && bun run build"
   },
   "dependencies": {
-    "@absolutejs/manifest": "^0.3.0",
+    "@absolutejs/manifest": "^0.7.3",
     "@sinclair/typebox": "^0.34.0",
     "yaml": "^2.8.1"
   },

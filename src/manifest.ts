@@ -30,6 +30,11 @@ export const manifest = defineManifest<Record<string, never>>()({
     name: "@absolutejs/arazzo",
     tagline: "Give agents a standard map from API capability to safe outcome.",
   },
+  integration: {
+    description:
+      "The host must provide its OpenAPI actions, exact resolved-input authorization, credential boundary, and HTTP executor before publishing or executing workflows.",
+    mode: "code-first",
+  },
   settings: Type.Object({}),
   wiring: [],
 });
