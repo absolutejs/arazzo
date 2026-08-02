@@ -9,6 +9,8 @@ that map, validate it, turn explicit `dependsOn` declarations and implicit
 `$steps.*.outputs.*` references into a deterministic plan, and execute each
 operation through an adapter you control.
 
+## Discovery and execution
+
 ```ts
 import { discoverArazzo, executeArazzoWorkflow } from "@absolutejs/arazzo";
 
@@ -26,6 +28,8 @@ const result = await executeArazzoWorkflow(document, "provisionCustomer", {
 });
 ```
 
+## Policy boundary
+
 Authorization receives the final resolved parameters and request body before
 `executeOperation` can run. A denial or approval requirement stops execution
 without producing an external effect. That makes the contract usable with
@@ -34,6 +38,8 @@ system without coupling Arazzo to any of them. Execution is default-deny when
 no authorization adapter is supplied; trusted read-only callers must opt out
 explicitly with `allowUnreviewed: true`.
 
+## Expression safety
+
 The built-in evaluator handles simple comparisons and regular expressions. An
 `evaluateCriterion` adapter is required for JSONPath or XPath so the package
 never silently guesses expression-version semantics. Nested workflows and
@@ -41,9 +47,13 @@ advanced control-flow or payload-replacement expansion are similarly rejected
 before any effect at execution time; they remain available in the validated
 document and plan for a specialized adapter.
 
+## Remote discovery security
+
 Remote discovery requires HTTPS outside localhost, rejects embedded URL
 credentials and redirects, caps response size, enforces a timeout, validates
 the media type, and parses JSON or YAML with bounded aliases.
+
+## HTTP action projection
 
 Applications that already own a typed HTTP action catalog can derive matching
 one-step Arazzo workflows and OpenAPI operations with
